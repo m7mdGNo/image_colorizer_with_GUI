@@ -5,3 +5,4 @@
 *.pt
 ex.ipynb
 prior_probs.npy
+new_loss.py
