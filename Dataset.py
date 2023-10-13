@@ -10,48 +10,8 @@ import config as conf
 from PIL import Image
 from skimage.color import rgb2lab, lab2rgb
 
-
-
-class ColorzationDataset(Dataset):
-    def __init__(self, img_paths):
-        self.img_paths = list(glob.glob(img_paths +  f'/*.jpg')+ glob.glob(img_paths + '/*.jpeg') + glob.glob(img_paths + '/*.png'))
-        self.transform = transforms.Compose([
-            transforms.ToTensor()
-        ])
-
-    def __len__(self):
-        return len(self.img_paths)
-
-    def __getitem__(self, idx):
-        img_path = self.img_paths[idx]
-        print(img_path)
-        img = cv2.imread(img_path)
-        h,w,_ = img.shape
-        img = cv2.resize(img,(conf.IMAGE_SIZE,conf.IMAGE_SIZE))
-        # # Convert the image from RGB to HSV
-        # hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
-        # # Increase the saturation of the image
-        # hsv[:,:,1] = np.clip(hsv[:,:,1]*1.5, 0, 255)
-
-        # # Convert the image back to RGB
-        # img = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-        
-        lab_img = cv2.cvtColor(img,cv2.COLOR_BGR2LAB)
-        l = lab_img[:,:,0]
-        l = np.expand_dims(l,2)
-        ab = lab_img[:,:,1:]
-        l = l.astype('float32')/255.0
-        ab = ab.astype('float32')/255.0
-
-        input_img = l
-        target_img = ab
-
-        input_img = self.transform(input_img)
-        target_img = self.transform(target_img)
-        return input_img,target_img
     
-class ColorzationDatasetNew(Dataset):
+class ColorzationDataset(Dataset):
     def __init__(self, img_paths):
         self.img_paths = list(glob.glob(img_paths +  f'/*.jpg')+ glob.glob(img_paths + '/*.jpeg') + glob.glob(img_paths + '/*.png'))
         self.transform = transforms.Compose([
@@ -66,14 +26,6 @@ class ColorzationDatasetNew(Dataset):
     def __getitem__(self, idx):
         img_path = self.img_paths[idx]
         img = cv2.imread(img_path)
-        # # Convert the image from RGB to HSV
-        # hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
-        # # Increase the saturation of the image
-        # hsv[:,:,1] = np.clip(hsv[:,:,1]*1.5, 0, 255)
-
-        # # Convert the image back to RGB
-        # img = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
         img = Image.fromarray(img)
         img = self.transform(img)
         img = np.array(img)
@@ -90,8 +42,8 @@ class ColorzationDatasetNew(Dataset):
 
 
 def test():
-    input_path = 'red_dataset/'
-    dataset = ColorzationDatasetNew(input_path)
+    input_path = 'coco_dataset/'
+    dataset = ColorzationDataset(input_path)
     loader = DataLoader(dataset, batch_size=1)
     for x, y in loader:
         x = x.squeeze().numpy()
@@ -100,14 +52,11 @@ def test():
 
         lab_img = np.concatenate([x,y],axis=2)
         bgr = cv2.cvtColor(lab_img,cv2.COLOR_LAB2BGR)
-        # print(np.max(bgr))
-        # bgr = np.clip(bgr,0,1)
 
         cv2.imshow('gray',np.uint8((x*255)))
         cv2.imshow('color',np.uint8((bgr*255)))
-        if cv2.waitKey(1) == 27:
+        if cv2.waitKey(0) == 27:
             break
-        # break
 
 if __name__ == "__main__":
     test()

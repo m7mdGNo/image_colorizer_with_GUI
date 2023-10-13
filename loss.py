@@ -27,8 +27,9 @@ class ColorizationLoss(nn.Module):
 
 
 class HistLoss(nn.Module):
-    def __init__(self):
+    def __init__(self,lambda_s):
         super(HistLoss, self).__init__()
+        self.lambda_s = lambda_s
     
     def forward(self, pred, target):
         # pred and target are batched histograms with shape (batch_size, k)
@@ -39,7 +40,7 @@ class HistLoss(nn.Module):
         # compute KL divergence
         loss = F.kl_div(pred_prob.log(), target_prob, reduction='batchmean')
         
-        return loss
+        return loss*self.lambda_s
 
 
 class PerceptualLoss(nn.Module):
@@ -62,9 +63,3 @@ if __name__ == "__main__":
     loss = PerceptualLoss()
     loss_value = loss(x,y)
     print(loss_value)
-    # y_hat = torch.randn((1,2,256,256),dtype=torch.float32)
-    # D = Discriminator(3,64)
-    # loss = generator_loss(x,y,y_hat,D)
-    # print(loss)
-    # loss = discriminator_hinge_loss(D,x,y,y_hat)
-    # print(loss)

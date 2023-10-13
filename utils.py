@@ -60,6 +60,10 @@ def generate_images(generator, input_path):
     lab_img = np.concatenate([img,gen_output],axis=2)
     bgr = cv2.cvtColor(np.uint8(lab_img*255),cv2.COLOR_LAB2RGB)
 
+    # hsv_image = cv2.cvtColor(bgr, cv2.COLOR_RGB2HSV)
+    # hsv_image[:, :, 1] = hsv_image[:, :, 1] * 1.5 
+    # bgr = cv2.cvtColor(hsv_image, cv2.COLOR_HSV2RGB)
+
     img = np.uint8(cv2.cvtColor(img,cv2.COLOR_GRAY2RGB)*255)
     
     final = np.concatenate((img,colored,bgr), axis=1)
