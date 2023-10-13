@@ -69,13 +69,9 @@ to upsample img again to the shape shape with 2 channels (batch_size,2,width,hei
 
 
 
-here is the example of unet.
-
-![unet archticture](gui_images/unet.jpg)
-
-
 ## Examples
-![example](gui_images/gif_img.gif)
+![example](gui_images/gui.png)
+![example](gui_images/gui2.png)
 
 ## Getting Started
 ### Installation
@@ -88,6 +84,8 @@ here is the example of unet.
     pip install -r requirements.txt
     ```
 ### Usage
+- download weights from this link https://drive.google.com/file/d/1L6c0Xo-VYFac_ijtyBQ1aL809XKCdVW0/view?usp=sharing
+- put the weights in the root folder
 - open the gui application using py gui.py
 - choose the input image/video
 - save the img (this will be saved by default on /saved folder)
